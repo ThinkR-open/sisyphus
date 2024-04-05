@@ -1,6 +1,6 @@
 Package: sisyphus
 Title: Rerun Tests Every Time You Change Your Code
-Version: 0.0.1
+Version: 0.0.1.9001
 Authors@R:
     person("Colin", "Fay", , "contact@colinfay.me", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-7343-1846"))

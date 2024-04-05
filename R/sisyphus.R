@@ -5,7 +5,7 @@
 #' @export
 #' @rdname sisyphus
 #'
-#' @importFrom later later destroy_loop
+#' @importFrom later later destroy_loop create_loop
 #' @importFrom testthat test_local
 #'
 #' @param check_fun Function to run when a file is edited
@@ -21,7 +21,7 @@ sisyphus_run <- function(
   files_to_watch = sisyphus::sisyphus_get_r_and_tests(),
   files_to_ignore = sisyphus::sisyphus_get_testthat_snaps()
 ) {
-  .sisyphus$loop <- later::create_loop()
+  .sisyphus$loop <- create_loop()
   .sisyphus$check_fun <- check_fun
   .sisyphus$check_delay <- delay
   .sisyphus$files_to_watch <- setdiff(
@@ -30,9 +30,9 @@ sisyphus_run <- function(
   )
 
   later(
-    last_edit_func,
+    func = last_edit_func,
     delay = .sisyphus$check_delay,
-    .sisyphus$loop
+    loop = .sisyphus$loop
   )
 }
 
@@ -118,9 +118,9 @@ last_edit_func <- function() {
   }
   .sisyphus$last_edit <- last_editdf
 
-  later::later(
-    last_edit_func,
+  later(
+    func = last_edit_func,
     delay = .sisyphus$check_delay,
-    .sisyphus$loop
+    loop = .sisyphus$loop
   )
 }

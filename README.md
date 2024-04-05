@@ -4,9 +4,13 @@
 # sisyphus
 
 <!-- badges: start -->
+
+[![Lifecycle:
+experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 <!-- badges: end -->
 
-The goal of sisyphus is to …
+The goal of sisyphus is to rerun to allow to rerun tests every time you
+change a file in your R package.
 
 ## Installation
 
@@ -18,8 +22,8 @@ pak::pak("thinkr-open/sisyphus")
 
 ## Example
 
-Run `testthat::test_local` every time you save a file in the `R/`
-directory:
+Run `testthat::test_local` every time you change a file in the `R/` &
+`tests` directories:
 
 ``` r
 sisyphus::sisyphus_run()
@@ -31,7 +35,13 @@ By default, the function is configured this way:
 
 - The check for modification is done every 1 second
 
-- The directory to watch is `R/`
+- The files to watch are `R/` & `tests/` (output of
+  `sisyphus::sisyphus_get_r_and_tests()`)
+
+- The ignored files are the one from `_snaps` (output of
+  `sisyphus::sisyphus_get_testthat_snaps()`), as snaps are modified
+  every time a test is run, creating an infinite loop if ever you watch
+  them.
 
 You can change these settings by passing arguments to the function:
 
