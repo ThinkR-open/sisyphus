@@ -18,8 +18,9 @@
 sisyphus_run <- function(
   check_fun = testthat::test_local,
   delay = 1,
-  files_to_watch = sisyphus::sisyphus_get_r_and_tests()()
+  files_to_watch = sisyphus::sisyphus_get_r_and_tests()
 ) {
+  browser()
   .sisyphus$loop <- later::create_loop()
   .sisyphus$check_fun <- check_fun
   .sisyphus$check_delay <- delay
