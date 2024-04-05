@@ -7,12 +7,14 @@
 \alias{sisyphus_change_check_fun}
 \alias{sisyphus_change_files_to_watch}
 \alias{sisyphus_get_r_and_tests}
+\alias{sisyphus_get_testthat_snaps}
 \title{Run & Stop Sisyphus}
 \usage{
 sisyphus_run(
   check_fun = testthat::test_local,
   delay = 1,
-  files_to_watch = (sisyphus::sisyphus_get_r_and_tests())()
+  files_to_watch = sisyphus::sisyphus_get_r_and_tests(),
+  files_to_ignore = sisyphus::sisyphus_get_testthat_snaps()
 )
 
 sisyphus_stop()
@@ -24,6 +26,8 @@ sisyphus_change_check_fun(check_fun)
 sisyphus_change_files_to_watch(files_to_watch)
 
 sisyphus_get_r_and_tests(home = getwd())
+
+sisyphus_get_testthat_snaps(home = getwd())
 }
 \arguments{
 \item{check_fun}{Function to run when a file is edited}
