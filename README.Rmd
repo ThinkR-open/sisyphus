@@ -37,33 +37,64 @@ Run `testthat::test_local` every time you change a file in the `R/` & `tests` di
 sisyphus::sisyphus_run()
 ```
 
-By default, the function is configured this way:
+The default params to this function are:
 
-- The function launched is `testthat::test_local()`
+- `check_fun`: The function launched every time a file change, by default `testthat::test_local()`
 
-- The check for modification is done every 1 second
+- `delay`: The check for modification is done every 1 second
 
-- The files to watch are `R/` & `tests/` (output of `sisyphus::sisyphus_get_r_and_tests()`)
+- `func_files_to_watch`: A fuction that return the files to watch: by default `sisyphus::sisyphus_get_r_and_tests`, that outputs the content  of `R/` & `tests/`
 
-- The ignored files are the one from `_snaps` (output of `sisyphus::sisyphus_get_testthat_snaps()`), as snaps are modified every time a test is run, creating an infinite loop if ever you watch them.
+- `func_files_to_ignore`: A fuction that return the files to ignore :by default `sisyphus::sisyphus_get_testthat_snaps`, that outputs the content  of `tests/testthat/_snaps`, as snaps are modified every time a test is run, creating an infinite loop if ever you watch them.
+
 
 You can change these settings by passing arguments to the function:
 
 ```r
 sisyphus::sisyphus_run(
-  check_fun = devtools::check,
+  check_fun = covr::package_coverage,
   delay = 2,
-  files_to_watch = list.files(
-    ".",
-    recursive = TRUE,
-    full.names = TRUE
-  )
+  files_to_watch = \(){
+    list.files(
+      ".",
+      recursive = TRUE,
+      full.names = TRUE
+    )
+  }
 )
 ```
 
 To stop the check, run `sisyphus_stop()`.
 
-To change the config of the checks while the loop is running, you can use `sisyphus_change_delay()`, `sisyphus_change_check_fun()`, and `sisyphus_change_files_to_watch()`.
+To change the config of the checks while the loop is running, you can use:
+
+- `sisyphus_change_delay()`
+- `sisyphus_change_check_fun()`
+- `sisyphus_change_fun_files_to_watch()`
+- `sisyphus_change_fun_files_to_ignore()`
+
+## Common Pitfalls
+
+- If not in RStudio, the printing to the console is not correct, and it looks like you don't have a terminal again. But you do have one, press Enter to get it back.
+
+- If you don't have a test infrastructure, you will get the following error:
+
+```r
+Error in `test_dir()`:
+! No test files found
+```
+
+Run `usethis::use_testthat()` to create a test infrastructure.
+
+- Using `devtools::check` will not fully print the output to the console but you'll get the error list.
+
+
+- `sisyphus::sisyphus_stop()` throws an error when the asynchronous loop it uses is already destroyed.
+
+```r
+> sisyphus::sisyphus_stop()
+Error: Expecting a single value: [extent=0].
+```
 
 ## Check function suggestions
 
@@ -72,8 +103,13 @@ Here is a list of some functions that can  be used to check:
 ```r
 sisyphus::sisyphus_run(
   check_fun = \() {
-    Sys.setenv("NOT_CRAN" = TRUE)
-    covr::report()
+    withr::with_envvar(
+      c("NOT_CRAN" = TRUE),{
+        cli::cli_alert_info("Running covr::report()...")
+        covr::report()
+        cli::cat_rule("")
+      }
+    )
   }
 )
 ```

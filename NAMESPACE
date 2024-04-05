@@ -2,7 +2,8 @@
 
 export(sisyphus_change_check_fun)
 export(sisyphus_change_delay)
-export(sisyphus_change_files_to_watch)
+export(sisyphus_change_fun_files_to_ignore)
+export(sisyphus_change_fun_files_to_watch)
 export(sisyphus_get_r_and_tests)
 export(sisyphus_get_testthat_snaps)
 export(sisyphus_run)

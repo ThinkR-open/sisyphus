@@ -104,14 +104,25 @@ test_that("sisyphus_change_check_fun works", {
   )
 })
 
-test_that("sisyphus_change_files_to_watch works", {
-  sisyphus_change_files_to_watch("test.R")
+test_that("sisyphus_change_fun_files_to_watch works", {
+  sisyphus_change_fun_files_to_watch(\(){
+    "test.R"
+  })
   expect_equal(
-    .sisyphus$files_to_watch,
+    .sisyphus$fun_files_to_watch(),
     "test.R"
   )
 })
 
+test_that("sisyphus_change_fun_files_to_ignore works", {
+  sisyphus_change_fun_files_to_ignore(\(){
+    "test.R"
+  })
+  expect_equal(
+    .sisyphus$fun_files_to_ignore(),
+    "test.R"
+  )
+})
 
 
 test_that("last_edit_func works", {
@@ -124,7 +135,9 @@ test_that("last_edit_func works", {
       ftw <- file.path(test_dir, "R", "test.R")
       file.create(ftw)
       sisyphus_run(
-        files_to_watch = ftw,
+        fun_files_to_watch = \(){
+          ftw
+        },
         check_fun = function() {
           1
         }

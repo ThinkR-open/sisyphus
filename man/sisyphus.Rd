@@ -5,7 +5,8 @@
 \alias{sisyphus_stop}
 \alias{sisyphus_change_delay}
 \alias{sisyphus_change_check_fun}
-\alias{sisyphus_change_files_to_watch}
+\alias{sisyphus_change_fun_files_to_watch}
+\alias{sisyphus_change_fun_files_to_ignore}
 \alias{sisyphus_get_r_and_tests}
 \alias{sisyphus_get_testthat_snaps}
 \title{Run & Stop Sisyphus}
@@ -13,8 +14,8 @@
 sisyphus_run(
   check_fun = testthat::test_local,
   delay = 1,
-  files_to_watch = sisyphus::sisyphus_get_r_and_tests(),
-  files_to_ignore = sisyphus::sisyphus_get_testthat_snaps()
+  fun_files_to_watch = sisyphus::sisyphus_get_r_and_tests,
+  fun_files_to_ignore = sisyphus::sisyphus_get_testthat_snaps
 )
 
 sisyphus_stop()
@@ -23,7 +24,9 @@ sisyphus_change_delay(delay)
 
 sisyphus_change_check_fun(check_fun)
 
-sisyphus_change_files_to_watch(files_to_watch)
+sisyphus_change_fun_files_to_watch(fun_files_to_watch)
+
+sisyphus_change_fun_files_to_ignore(fun_files_to_ignore)
 
 sisyphus_get_r_and_tests(home = getwd())
 
@@ -34,7 +37,9 @@ sisyphus_get_testthat_snaps(home = getwd())
 
 \item{delay}{Delay between checks}
 
-\item{files_to_watch}{Files to watch for changes}
+\item{fun_files_to_watch}{Function that return a list of files to watch for changes}
+
+\item{fun_files_to_ignore}{Function that return a list of files to ignore the changes}
 
 \item{home}{Home directory from where to get R & tests files}
 }

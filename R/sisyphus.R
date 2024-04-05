@@ -10,7 +10,8 @@
 #'
 #' @param check_fun Function to run when a file is edited
 #' @param delay Delay between checks
-#' @param files_to_watch Files to watch for changes
+#' @param fun_files_to_watch Function that return a list of files to watch for changes
+#' @param fun_files_to_ignore Function that return a list of files to ignore the changes
 #' @param home Home directory from where to get R & tests files
 #'
 #' @return Used for side effect
@@ -18,17 +19,14 @@
 sisyphus_run <- function(
   check_fun = testthat::test_local,
   delay = 1,
-  files_to_watch = sisyphus::sisyphus_get_r_and_tests(),
-  files_to_ignore = sisyphus::sisyphus_get_testthat_snaps()
+  fun_files_to_watch = sisyphus::sisyphus_get_r_and_tests,
+  fun_files_to_ignore = sisyphus::sisyphus_get_testthat_snaps
 ) {
   .sisyphus$loop <- create_loop()
   .sisyphus$check_fun <- check_fun
   .sisyphus$check_delay <- delay
-  .sisyphus$files_to_watch <- setdiff(
-    files_to_watch,
-    files_to_ignore
-  )
-
+  .sisyphus$fun_files_to_watch <- fun_files_to_watch
+  .sisyphus$fun_files_to_ignore <- fun_files_to_ignore
   later(
     func = last_edit_func,
     delay = .sisyphus$check_delay,
@@ -56,8 +54,14 @@ sisyphus_change_check_fun <- function(check_fun) {
 
 #' @export
 #' @rdname sisyphus
-sisyphus_change_files_to_watch <- function(files_to_watch) {
-  .sisyphus$files_to_watch <- files_to_watch
+sisyphus_change_fun_files_to_watch <- function(fun_files_to_watch) {
+  .sisyphus$fun_files_to_watch <- fun_files_to_watch
+}
+
+#' @export
+#' @rdname sisyphus
+sisyphus_change_fun_files_to_ignore <- function(fun_files_to_ignore) {
+  .sisyphus$fun_files_to_ignore <- fun_files_to_ignore
 }
 
 #' @export
@@ -102,7 +106,10 @@ sisyphus_get_testthat_snaps <- function(
 
 last_edit_func <- function() {
   last_edit <- file.info(
-    .sisyphus$files_to_watch
+    setdiff(
+      .sisyphus$fun_files_to_watch(),
+      .sisyphus$fun_files_to_ignore()
+    )
   )
   last_editdf <- data.frame(
     file = row.names(last_edit),
