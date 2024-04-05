@@ -18,19 +18,22 @@
 sisyphus_run <- function(
   check_fun = testthat::test_local,
   delay = 1,
-  files_to_watch = sisyphus::sisyphus_get_r_and_tests()
+  files_to_watch = sisyphus::sisyphus_get_r_and_tests(),
+  files_to_ignore = sisyphus::sisyphus_get_testthat_snaps()
 ) {
   .sisyphus$loop <- later::create_loop()
   .sisyphus$check_fun <- check_fun
   .sisyphus$check_delay <- delay
-  .sisyphus$files_to_watch <- files_to_watch
+  .sisyphus$files_to_watch <- setdiff(
+    files_to_watch,
+    files_to_ignore
+  )
 
   later(
     last_edit_func,
     delay = .sisyphus$check_delay,
     .sisyphus$loop
   )
-
 }
 
 #' @export
@@ -60,8 +63,7 @@ sisyphus_change_files_to_watch <- function(files_to_watch) {
 #' @export
 #' @rdname sisyphus
 sisyphus_get_r_and_tests <- function(
-  home = getwd()
-){
+  home = getwd()) {
   c(
     list.files(
       path = file.path(
@@ -79,6 +81,22 @@ sisyphus_get_r_and_tests <- function(
       recursive = TRUE,
       full.names = TRUE
     )
+  )
+}
+
+#' @export
+#' @rdname sisyphus
+sisyphus_get_testthat_snaps <- function(
+  home = getwd()) {
+  list.files(
+    path = file.path(
+      home,
+      "tests",
+      "testthat",
+      "_snaps"
+    ),
+    recursive = TRUE,
+    full.names = TRUE
   )
 }
 
@@ -103,6 +121,6 @@ last_edit_func <- function() {
   later::later(
     last_edit_func,
     delay = .sisyphus$check_delay,
-     .sisyphus$loop
+    .sisyphus$loop
   )
 }
