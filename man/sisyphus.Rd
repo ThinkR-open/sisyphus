@@ -9,7 +9,7 @@
 \alias{sisyphus_change_fun_files_to_ignore}
 \alias{sisyphus_get_r_and_tests}
 \alias{sisyphus_get_testthat_snaps}
-\title{Run & Stop Sisyphus}
+\title{Watch files for changes and run a function when one or more are edited}
 \usage{
 sisyphus_run(
   check_fun = testthat::test_local,
@@ -47,5 +47,11 @@ sisyphus_get_testthat_snaps(home = getwd())
 Used for side effect
 }
 \description{
-Run & Stop Sisyphus
+Run Sisyphus to check for changes in files and run a function when a file is edited.
+\itemize{
+\item \code{sisyphus_run()} & \code{sisyphus_stop()} start and stop file watching
+\item \code{sisyphus_change_delay()}, \code{sisyphus_change_check_fun()}, \code{sisyphus_change_fun_files_to_watch()}, \code{sisyphus_change_fun_files_to_ignore()} change the delay between checks, the function to run when a file is edited, the function that returns the files to watch for changes, and the function that returns the files to ignore the changes, respectively.
+\item \code{sisyphus_get_r_and_tests()} returns a list of R and test files to watch for changes
+\item \code{sisyphus_get_testthat_snaps()} returns a list of testthat snapshot files to ignore
+}
 }

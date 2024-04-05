@@ -1,6 +1,12 @@
 .sisyphus <- new.env()
 
-#' Run & Stop Sisyphus
+#' Watch files for changes and run a function when one or more are edited
+#'
+#' Run Sisyphus to check for changes in files and run a function when a file is edited.
+#' - `sisyphus_run()` & `sisyphus_stop()` start and stop file watching
+#' - `sisyphus_change_delay()`, `sisyphus_change_check_fun()`, `sisyphus_change_fun_files_to_watch()`, `sisyphus_change_fun_files_to_ignore()` change the delay between checks, the function to run when a file is edited, the function that returns the files to watch for changes, and the function that returns the files to ignore the changes, respectively.
+#' - `sisyphus_get_r_and_tests()` returns a list of R and test files to watch for changes
+#' - `sisyphus_get_testthat_snaps()` returns a list of testthat snapshot files to ignore
 #'
 #' @export
 #' @rdname sisyphus
