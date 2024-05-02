@@ -52,11 +52,14 @@ You can change these settings by passing arguments to the function:
 
 ```r
 sisyphus::sisyphus_run(
-  check_fun = covr::package_coverage,
-  delay = 2,
-  files_to_watch = \(){
+  check_fun = \(){
+    print(covr::package_coverage())
+  },
+  delay = 0.5
+  ,
+  fun_files_to_watch = \(){
     list.files(
-      ".",
+      here::here(),
       recursive = TRUE,
       full.names = TRUE
     )
@@ -64,7 +67,7 @@ sisyphus::sisyphus_run(
 )
 ```
 
-To stop the check, run `sisyphus_stop()`.
+To stop the check, run `sisyphus::sisyphus_stop()`.
 
 To change the config of the checks while the loop is running, you can use:
 
